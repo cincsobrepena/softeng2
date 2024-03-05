@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+		<link rel="stylesheet" href="css/employees.css">
+		<title>Home - Employee</title>
+	</head>
+	<body>
+		<section class="dashboard">
+			<!-- User Header  -->
+			<div class="profile">
+				<div class="wrapper-img">
+
+					<!-- Temporary Profile DP  -->
+					<i class='bx bx-user-circle' ></i>
+					
+				</div>
+				<div class="wrapper-user-details">
+					<p class="username" id="userName">Username</p>
+					<p class="position" id="position">Position</p>
+				</div>
+			</div>
+		
+			<!-- Navigation Links -->
+			<div class="nav-links">
+				<div class="nav-link">
+					<i class='bx bx-group icon-nav-link' ></i>
+					<p>Employees</p>
+				</div>
+				<div class="nav-link">
+					<i class='bx bx-briefcase icon-nav-link' ></i>
+					<p>Clients</p>
+				</div>
+			</div>
+
+			<div class="logout-wrapper">
+				<i class='bx bx-log-out icon-logout'></i>
+			</div>
+		</section>
+
+		<section class="employee-table">
+			<div class="header">
+				<h1>Employees</h1>
+				<div class="header-icons">
+					<i class='bx bx-plus-medical icon-header-action' id="btn-add" ></i>
+					<i class='bx bx-trash icon-header-action' id="btn-delete" ></i>
+				</div>
+			</div>
+
+			<!-- Employee Table  -->
+			<table>
+				<thead>
+					<th></th>
+					<th>ID</th>
+					<th>Name</th>
+					<th>Age</th>
+					<th>Gender</th>
+					<th>Email</th>
+					<th>Salary</th>
+					<th>Position</th>
+					<th>Department</th>
+					<th>Actions</th>
+				</thead>
+
+				<!-- Insert Employee data here  -->
+				<tbody>
+					<!-- Sample Data  -->
+					<tr>
+						<td><input type="checkbox"></td> <!-- Create checkbox ID based on the Employee's ID -->
+						<td>001</td>
+						<td>Shoudie Marzan</td>
+						<td>30</td>
+						<td>Male</td>
+						<td>shoudie.marzan@ciit.edu.ph</td>
+						<td>40,000</td>
+						<td>Scram Master</td>
+						<td>IT Department</td>
+						<td>
+							<!-- Copy and insert this this Action Icons on every last column in every row -->
+							<i class='bx bx-edit-alt icon-action' id="btn-update"></i> 
+						</td>
+					</tr>
+			
+					<tr>
+						<td><input type="checkbox"></td> <!-- Create checkbox ID based on the Employee's ID -->
+						<td>002</td>
+						<td>Joaquin Tolentino</td>
+						<td>22</td>
+						<td>Male</td>
+						<td>joaquin.tolentino@ciit.edu.ph</td>
+						<td>28,800</td>
+						<td>Senior Dev</td>
+						<td>IT Department</td>
+						<td>
+							<!-- Copy and insert this this Action Icons on every last column in every row -->
+							<i class='bx bx-edit-alt icon-action' id="btn-update"></i> 
+						</td>
+					</tr>
+					
+					<tr>
+						<td><input type="checkbox"></td> <!-- Create checkbox ID based on the Employee's ID -->
+						<td>003</td>
+						<td>Carl Sobrepena</td>
+						<td>23</td>
+						<td>Male</td>
+						<td>carl.sobrepena@ciit.edu.ph</td>
+						<td>25,000</td>
+						<td>Junior Dev</td>
+						<td>IT Department</td>
+						<td>
+							<!-- Copy and insert this this Action Icons on every last column in every row -->
+							<i class='bx bx-edit-alt icon-action' id="btn-update"></i> 
+						</td>
+					</tr>
+
+					<tr>
+						<td><input type="checkbox"></td> <!-- Create checkbox ID based on the Employee's ID -->
+						<td>004</td>
+						<td>Sean Regala</td>
+						<td>25</td>
+						<td>Male</td>
+						<td>sean.regala@ciit.edu.ph</td>
+						<td>23,000</td>
+						<td>Junior Dev</td>
+						<td>IT Department</td>
+						<td>
+							<!-- Copy and insert this this Action Icons on every last column in every row -->
+							<i class='bx bx-edit-alt icon-action' id="btn-update"></i> 
+						</td>
+					</tr>
+					
+
+					<!-- Remove the Sample Data and insert rows here  -->
+					
+				</tbody>
+			</table>
+
+		</section>
+	</body>
+</html>

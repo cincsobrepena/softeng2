@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+		<link rel="stylesheet" href="css/index.css">
+		<title>Login</title>
+	</head>
+	<body>
+			<!-- Login-wrapper -->
+			<div class="login-wrapper">
+				<h2>Welcome</h2>
+				<form action="employees.html" method="post">
+					
+					<!-- Username Input -->
+					<div class="input-wrapper">
+						<label for="username">Username</label>
+						<div class="input-box">
+							<i class='bx bx-user icon-input' ></i>
+							<input type="text" name="username" id="username" required>
+						</div>
+					</div>
+
+					<!-- Password Input -->
+					<div class="input-wrapper">
+						<label for="password">Password</label>
+						<div class="input-box">
+							<i class='bx bx-lock-alt icon-input'></i>
+							<input type="password" name="password" id="password" required>
+						</div>
+					</div>
+
+					<!-- Submit button -->
+					<input id="btn-submit" type="submit" value="Login">
+				</form>
+			</div>
+	</body>
+</html>

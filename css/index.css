@@ -1,0 +1,151 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+}
+
+body {
+    height: 100vh;
+    background-image: url('/img/bg2.jpg');
+    background-size:auto;
+    background-position: center;
+    background-size: cover;
+}
+
+.login-wrapper {
+    position:absolute;
+    top: 5%;
+    left: 5%;
+
+    float: left;
+    width: 40%;
+    height: 90vh;
+    /* margin: 4rem; */
+    border-radius: 2rem;
+    padding-top: 10%;
+
+    color: white;
+    background-color: rgba(145, 0, 189, 0.01);
+    backdrop-filter: blur(10px);
+    box-shadow: 1rem 1rem 3rem rgba(0, 0, 0, .4);
+    text-align: left;
+}   
+
+
+.login-wrapper h2 {
+    text-transform: uppercase;
+    font-size: 3rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 5rem;
+}
+
+.input-wrapper {
+    display: flex;
+    
+    flex-direction: column;
+    width: 86%;
+    margin-bottom: 3rem;
+}
+
+.input-wrapper> * {
+    margin-left: 3rem;
+}
+
+.input-wrapper label{
+    padding: .5rem;
+    font-size: 1.4rem;
+    font-weight: 400;
+}
+
+.input-box {
+    background-color: white;
+    border-radius: 1rem;
+}
+
+.input-box .icon-input{
+    font-size: 1.3rem;
+    font-weight: bold;
+    padding: 1.2rem;
+    color: rgb(105, 0, 175);
+}
+
+.input-box input{
+    width: 82%;
+    font-size: 1.2rem;
+    padding:.8rem .8rem .8rem 0;
+    border: solid rgba(145, 0, 189, 0);
+    border-radius: 0  1rem 1rem 0;
+}
+
+.input-box input:focus {
+    outline: none;
+}
+
+#btn-submit {
+    width: 50%;
+    margin: 3rem 25%;
+    padding: 1rem;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: white;
+    background-color: rgb(105, 0, 175);
+    border: solid rgba(145, 0, 189, 0.2);
+    border-radius: 1.4rem;
+}
+
+
+/* RDW  */
+@media screen and (max-width: 992px){
+    .login-wrapper {
+        left: 10%;
+        width: 80%;
+        margin-bottom: 1rem;
+    }
+
+    .input-wrapper {
+        margin-left: 3%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+
+    
+    .login-wrapper h2 {
+        margin-top: 3rem;
+        font-size: 2.8rem;
+    }
+    
+    .input-wrapper {
+        margin: 0
+    }
+
+    .input-wrapper> * {
+        width: 100%;
+        margin-left: 1rem;
+    }
+    
+    .input-box .icon-input{
+        font-size: 1.3rem;
+        font-weight: bold;
+        padding: 1rem;
+        color: rgb(105, 0, 175);
+    }
+    
+    .input-box input{
+        width: 60%;
+        font-size: 1rem;
+        padding: .4rem;
+    }
+
+    #btn-submit {
+        width: 50%;
+        margin: 3rem 25%;
+    }
+}
