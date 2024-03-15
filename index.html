@@ -1,39 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-		<link rel="stylesheet" href="css/index.css">
-		<title>Login</title>
-	</head>
-	<body>
-			<!-- Login-wrapper -->
-			<div class="login-wrapper">
-				<h2>Welcome</h2>
-				<form action="employees.html" method="post">
-					
-					<!-- Username Input -->
-					<div class="input-wrapper">
-						<label for="username">Username</label>
-						<div class="input-box">
-							<i class='bx bx-user icon-input' ></i>
-							<input type="text" name="username" id="username" required>
-						</div>
-					</div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="css/index.css">
+    <title>Login</title>
 
-					<!-- Password Input -->
-					<div class="input-wrapper">
-						<label for="password">Password</label>
-						<div class="input-box">
-							<i class='bx bx-lock-alt icon-input'></i>
-							<input type="password" name="password" id="password" required>
-						</div>
-					</div>
+    <!--Scripts to import firestore app-->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 
-					<!-- Submit button -->
-					<input id="btn-submit" type="submit" value="Login">
-				</form>
-			</div>
-	</body>
+
+    <script>
+		// =======================================================================Firestore Database Config Values=================================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyBnmCpnUv0XLJFpG25yE9-C3hmsurFd7ms",
+			authDomain: "finalssofteng.firebaseapp.com",
+			projectId: "finalssofteng",
+			storageBucket: "finalssofteng.appspot.com",
+			messagingSenderId: "789005820786",
+			appId: "1:789005820786:web:6867b8c4b10c559a9833eb",
+			measurementId: "G-YVS3WKF4XT"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+
+		// =======================================================================Firestore Access and Credential Checking=============================================================
+        const db = firebase.firestore();
+
+        // Function to handle login form submission
+        function handleLogin(event) {
+            event.preventDefault();
+
+            // Get entered username and password
+            const enteredUsername = document.getElementById('username').value;
+            const enteredPassword = document.getElementById('password').value;
+
+            // Checks the existing database for Login Data 
+            const loginDataRef = db.collection('LoginData');
+
+            // Query Firestore for the entered username
+            loginDataRef.where('username', '==', enteredUsername)
+                .get()
+                .then((querySnapshot) => {
+                    if (!querySnapshot.empty) {
+                        // If user is found check password
+                        const userDoc = querySnapshot.docs[0];
+                        const storedPassword = userDoc.data().password;
+
+                        if (enteredPassword === storedPassword) {
+                            // On Successful login
+                            alert('Login successful! Redirecting to employees.html');
+                            window.location.href = 'employees.html';
+                        } else {
+                            // Incorrect password Handling
+                            alert('Incorrect password. Please try again.');
+                        }
+                    } else {
+                        // If User not found
+                        alert('User not found. Please check your username.');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error querying Firestore:', error);
+                });
+        }
+    </script>
+</head>
+<body>
+    <!-- Login-wrapper -->
+    <div class="login-wrapper">
+        <div class="header-wrapper">
+            <h2>Welcome</h2>
+        </div>
+
+            <form class="form-wrapper" onsubmit="handleLogin(event)">
+                
+                
+                
+                <div class="input-wrapper">
+                    <!-- Username Input -->
+                    <label for="username">Username</label>
+                    <div class="input-box">
+                        <i class='bx bx-user icon-input' ></i>
+                        <input type="text" name="username" id="username" required>
+                    </div>
+                    <!-- Password Input -->
+                    <label for="password">Password</label>
+                    <div class="input-box">
+                        <i class='bx bx-lock-alt icon-input'></i>
+                        <input type="password" name="password" id="password" required>
+                    </div>
+                    <!-- Submit button -->
+                    <input id="btn-submit" type="submit" value="Login">
+                </div>
+
+            </form>
+	</div>
+</body>
 </html>

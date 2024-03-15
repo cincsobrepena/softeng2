@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="css/input-employee.css">
+    <title>Update Employee</title>
+
+    <!-- Include Firebase JavaScript SDK (Non-module version) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+</head>
+
+<body>
+    <div class="input-employee-wrapper">
+        <div class="title-header">
+            <h2>Edit Employee</h2>
+        </div>
+
+        <form id="editEmployeeForm">
+
+
+            <div class="input-box">
+                <label for="inp-name">Name</label>
+                <input type="text" id="inp-name" required>
+            </div>
+
+            <div class="input-box">
+                <label for="inp-age">Age</label>
+                <input type="number" id="inp-age" required>
+            </div>
+
+            <div class="input-box">
+                <label for="inp-gender">Gender</label>
+                <input type="text" id="inp-gender" required>
+            </div>
+
+            <div class="input-box">
+                <label for="inp-email">Email</label>
+                <input type="email" id="inp-email" required>
+            </div>
+
+            <div class="input-box">
+                <label for="inp-salary">Salary</label>
+                <input type="number" id="inp-salary" required>
+            </div>
+
+            <div class="input-box">
+                <label for="inp-position">Position</label>
+                <input type="text" id="inp-position" required>
+            </div>
+
+            <div class="input-box">
+                <label for="inp-department">Department</label>
+                <input type="text" id="inp-department" required>
+            </div>
+
+            <div class="input-submit-box">
+                <button id="btn-cancel">CANCEL</button>
+                <input type="submit" value="UPDATE" id="btn-update-emp">
+            </div>
+        </form>
+    </div>
+
+    <script>
+
+
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+		// =======================================================================Firestore Database Config Values=================================================================
+        const firebaseConfig = {
+                apiKey: "AIzaSyBnmCpnUv0XLJFpG25yE9-C3hmsurFd7ms",
+                authDomain: "finalssofteng.firebaseapp.com",
+                projectId: "finalssofteng",
+                storageBucket: "finalssofteng.appspot.com",
+                messagingSenderId: "789005820786",
+                appId: "1:789005820786:web:6867b8c4b10c559a9833eb",
+                measurementId: "G-YVS3WKF4XT"
+            };
+        // ========================================================================================================================================================================
+        
+            firebase.initializeApp(firebaseConfig);
+
+            // Access Firestore
+            const db = firebase.firestore();
+
+            const name = document.getElementById("inp-name");
+            const age = document.getElementById("inp-age");
+            const gender = document.getElementById("inp-gender");
+            const email = document.getElementById("inp-email");
+            const salary = document.getElementById("inp-salary");
+            const position = document.getElementById("inp-position");
+            const department = document.getElementById("inp-department");
+
+
+            function fillInputBoxes(event) {
+                event.preventDefault();
+
+                //Fetch the employee from the previous page
+                const employeeID = parseInt(sessionStorage.getItem('employeeID'));
+
+                // Reference to the Employee Data Document
+                const employeeDataRef = db.collection('EmployeeData');
+
+                //Fetch Employee's data from Firestore'
+                employeeDataRef.where('employee_id', '==', employeeID)
+                    .get()
+                    .then((querySnapshot) => {
+                        if(!querySnapshot.empty) {
+                            const userDoc = querySnapshot.docs[0];
+                            name.value = userDoc.data().name;
+                            age.value = parseInt(userDoc.data().age);
+                            gender.value = userDoc.data().gender;
+                            email.value = userDoc.data().email;
+                            salary.value = parseInt(userDoc.data().salary);
+                            position.value = userDoc.data().position;
+                            department.value = userDoc.data().department;
+                        } 
+                        else 
+                        {
+                            alert('Employee not Found');
+                        }
+                    }).catch((error) => {
+                        console.error("Error searching employee: ", error);
+                    }); 
+            }
+
+            fillInputBoxes(event);
+
+            //Selection of the Edit Employee Form
+            const updateEmployeeForm = document.getElementById("editEmployeeForm");
+            
+            //Update the Employee's Details
+            updateEmployeeForm.addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                //Storing input fields value to variables
+                const temp_name = name.value;
+                const temp_age = parseInt(age.value);
+                const temp_gender = gender.value;
+                const temp_email = email.value;
+                const temp_salary = parseInt(salary.value);
+                const temp_position = position.value;
+                const temp_department = department.value;
+
+                //Fetch the employee from the previous page
+                const employeeID = parseInt(sessionStorage.getItem('employeeID'));
+
+                // Reference to the Employee Data Document
+                const employeeDataRef = db.collection('EmployeeData');
+
+                // Search for the Employee using employee ID
+                employeeDataRef.where('employee_id', '==', employeeID)
+                    .limit(1)
+                    .get()
+                    .then((querySnapshot) => {
+                        //When a user if found update the Employee
+                        if(!querySnapshot.empty) {
+                            
+                            //Employee Query for getting the document ID
+                            querySnapshot.forEach(doc => {
+
+                                //Reference for the Employee's Document
+                                const employeeDocRef = db.collection('EmployeeData').doc(doc.id);
+                                
+                                //Updates the Employee Data in firestore
+                                employeeDocRef.update({ 
+                                    name: temp_name,
+                                    age: temp_age,
+                                    gender: temp_gender,
+                                    email: temp_email,
+                                    salary: temp_salary,
+                                    position: temp_position,
+                                    department: temp_department
+                                })
+                                .then( function (docRef) {
+                                console.log("Employee updated: ", docRef);
+                                window.location.href = "employees.html";
+                                })
+                                .catch(function (error) {
+                                    console.error("Error updating employee: ", error);
+                                });
+                            });         
+                            
+                        } 
+                        else 
+                        {
+                            alert('Employee not Found');
+                        }
+                    }).catch((error) => {
+                        console.error("Error searching employee: ", error);
+                    }); 
+            });
+
+            const cancelButton = document.getElementById('btn-cancel');
+
+            cancelButton.addEventListener('click', function(event){
+                event.preventDefault();
+
+                window.location.href = "employees.html";
+            });
+        });
+</script>
+</body>
+
+</html>

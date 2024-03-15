@@ -1,60 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-        <link rel="stylesheet" href="css/add-employee.css">
-        <title>Document</title>
-    </head>
-    <body>
-        <div class="add-employee-wrapper">
-            <div class="add-header">
-                <i class='bx bx-arrow-back' id="icon-close-add-employee"></i> <!-- Use this as a Back Button -->
-                <h2>Add New Employee</h2>
-            </div>
-            
-            <!-- Edit the "Action" attribute for the Add New Employee Form -->
 
-            <form action="" method="post">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="css/input-employee.css">
+    <title>Add New Employee</title>
 
-                <div class="input-box">
-                    <label for="inp-name">Name</label>
-                    <input type="text" id="inp-name">
-                </div>
+    <!-- Include Firebase JavaScript SDK (Non-module version) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+</head>
 
-                <div class="input-box">
-                    <label for="inp-age">Age</label>	
-                    <input type="text" id="inp-age">
-                </div>
-
-                <div class="input-box">
-                    <label for="inp-gender">Gender</label>
-                    <input type="text" id="inp-gender">
-                </div>
-
-                <div class="input-box">
-                    <label for="inp-email">Email</label>
-                    <input type="email" id="inp-email">
-                </div>
-
-                <div class="input-box">
-                    <label for="inp-salary">Salary</label>
-                    <input type="text" id="inp-salary">
-                </div>
-
-                <div class="input-box">
-                    <label for="inp-position">Position</label>
-                    <input type="text" id="inp-position">
-                </div>
-
-                <div class="input-box">
-                    <label for="inp-department">Department</label>
-                    <input type="text" id="inp-department">
-                </div>
-
-                <input type="submit" value="Add New Employee" id="btn-add-emp">
-            </form>
+<body>
+    <div class="input-employee-wrapper">
+        <div class="title-header">
+            <h2>Add New Employee</h2>
         </div>
-    </body>
+
+        <form id="addEmployeeForm">
+            
+            
+            <div class="input-box">
+                <label for="inp-name">Name</label>
+                <input type="text" id="inp-name" required>
+            </div>
+
+            <div class="input-box">
+                <label for="inp-age">Age</label>
+                <input type="number" id="inp-age" required>
+            </div>
+
+            <div class="input-box">
+                <label for="inp-gender">Gender</label>
+                <input type="text" id="inp-gender" required>
+            </div>
+
+            <div class="input-box">
+                <label for="inp-email">Email</label>
+                <input type="email" id="inp-email" required>
+            </div>
+
+            <div class="input-box">
+                <label for="inp-salary">Salary</label>
+                <input type="number" id="inp-salary" required>
+            </div>
+
+            <div class="input-box">
+                <label for="inp-position">Position</label>
+                <input type="text" id="inp-position" required>
+            </div>
+
+            <div class="input-box">
+                <label for="inp-department">Department</label>
+                <input type="text" id="inp-department" required>
+            </div>
+
+            <div class="input-submit-box">
+                <button id="btn-cancel">CANCEL</button>
+                <input type="submit" value="ADD" id="btn-add-emp">
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+		// =======================================================================Firestore Database Config Values=================================================================
+        const firebaseConfig = {
+                apiKey: "AIzaSyBnmCpnUv0XLJFpG25yE9-C3hmsurFd7ms",
+                authDomain: "finalssofteng.firebaseapp.com",
+                projectId: "finalssofteng",
+                storageBucket: "finalssofteng.appspot.com",
+                messagingSenderId: "789005820786",
+                appId: "1:789005820786:web:6867b8c4b10c559a9833eb",
+                measurementId: "G-YVS3WKF4XT"
+            };
+        // ========================================================================================================================================================================
+        
+            firebase.initializeApp(firebaseConfig);
+
+            // Access Firestore
+            const db = firebase.firestore();
+
+            const addEmployeeForm = document.getElementById("addEmployeeForm");
+
+            addEmployeeForm.addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                const name = document.getElementById("inp-name").value;
+                const age = parseInt(document.getElementById("inp-age").value);
+                const gender = document.getElementById("inp-gender").value;
+                const email = document.getElementById("inp-email").value;
+                const salary = parseInt(document.getElementById("inp-salary").value);
+                const position = document.getElementById("inp-position").value;
+                const department = document.getElementById("inp-department").value;
+
+                db.collection("EmployeeData")
+                    .orderBy("employee_id", "desc")
+                    .limit(1)
+                    .get()
+                    .then((querySnapshot) => {
+                        let newEmployeeId = 1;
+
+                        if (!querySnapshot.empty) {
+                            const latestEmployee = querySnapshot.docs[0].data();
+                            newEmployeeId = latestEmployee.employee_id + 1; 
+                        }
+
+                        db.collection("EmployeeData").add({
+                            employee_id: newEmployeeId,
+                            name: name,
+                            age: age,
+                            gender: gender,
+                            email: email,
+                            salary: salary,
+                            position: position,
+                            department: department
+                        })
+                            .then(function (docRef) {
+                                console.log("Employee added with ID: ", docRef.id);
+                                window.location.href = "employees.html";
+                            })
+                            .catch(function (error) {
+                                console.error("Error adding employee: ", error);
+                            });
+                    })
+                    .catch((error) => {
+                        console.error("Error getting latest employee_id: ", error);
+                    });
+            });
+
+
+            const cancelButton = document.getElementById('btn-cancel');
+
+            cancelButton.addEventListener('click', function(event){
+                event.preventDefault();
+
+                window.location.href = "employees.html";
+            });
+        });
+</script>
+</body>
+
 </html>

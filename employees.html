@@ -1,142 +1,225 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-		<link rel="stylesheet" href="css/employees.css">
-		<title>Home - Employee</title>
-	</head>
-	<body>
-		<section class="dashboard">
-			<!-- User Header  -->
-			<div class="profile">
-				<div class="wrapper-img">
 
-					<!-- Temporary Profile DP  -->
-					<i class='bx bx-user-circle' ></i>
-					
-				</div>
-				<div class="wrapper-user-details">
-					<p class="username" id="userName">Username</p>
-					<p class="position" id="position">Position</p>
-				</div>
-			</div>
-		
-			<!-- Navigation Links -->
-			<div class="nav-links">
-				<div class="nav-link">
-					<i class='bx bx-group icon-nav-link' ></i>
-					<p>Employees</p>
-				</div>
-				<div class="nav-link">
-					<i class='bx bx-briefcase icon-nav-link' ></i>
-					<p>Clients</p>
-				</div>
-			</div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="css/employees.css">
+    <title>Home - Employee</title>
 
-			<div class="logout-wrapper">
-				<i class='bx bx-log-out icon-logout'></i>
-			</div>
-		</section>
+    <!-- Include Non Module version of Firebase SDK Javascript -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+</head>
 
-		<section class="employee-table">
-			<div class="header">
-				<h1>Employees</h1>
-				<div class="header-icons">
-					<i class='bx bx-plus-medical icon-header-action' id="btn-add" ></i>
-					<i class='bx bx-trash icon-header-action' id="btn-delete" ></i>
-				</div>
-			</div>
+<body>
+    <section class="navbar">
+        <label>TS</label>
+        <i class='bx bx-log-out' id="btn-logout"></i>
+    </section>
+    <section class="employee-table">
+        <div class="header">
+            <h1>Employees</h1>
+            <div class="header-icons">
+                <i class='bx bx-plus-medical icon-header-action' id="btn-add"></i>
+                <i class='bx bx-trash icon-header-action' id="btn-delete"></i>
+            </div>
+        </div>
 
-			<!-- Employee Table  -->
-			<table>
-				<thead>
-					<th></th>
-					<th>ID</th>
-					<th>Name</th>
-					<th>Age</th>
-					<th>Gender</th>
-					<th>Email</th>
-					<th>Salary</th>
-					<th>Position</th>
-					<th>Department</th>
-					<th>Actions</th>
-				</thead>
+        <!-- Employee Table  -->
+        <table id="empTable">
+            <thead>
+                <th></th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Email</th>
+                <th>Salary</th>
+                <th>Position</th>
+                <th>Department</th>
+                <th>Actions</th>
+            </thead>
 
-				<!-- Insert Employee data here  -->
-				<tbody>
-					<!-- Sample Data  -->
-					<tr>
-						<td><input type="checkbox"></td> <!-- Create checkbox ID based on the Employee's ID -->
-						<td>001</td>
-						<td>Shoudie Marzan</td>
-						<td>30</td>
-						<td>Male</td>
-						<td>shoudie.marzan@ciit.edu.ph</td>
-						<td>40,000</td>
-						<td>Scram Master</td>
-						<td>IT Department</td>
-						<td>
-							<!-- Copy and insert this this Action Icons on every last column in every row -->
-							<i class='bx bx-edit-alt icon-action' id="btn-update"></i> 
-						</td>
-					</tr>
+            <tbody>
+                <!-- Data will be populated from Firestore Database -->
+            </tbody>
+        </table>
+    </section>
+
+    <script>
+
+        
+
+        document.addEventListener("DOMContentLoaded", function () {
+		// =======================================================================Firestore Database Config Values=================================================================
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyBnmCpnUv0XLJFpG25yE9-C3hmsurFd7ms",
+				authDomain: "finalssofteng.firebaseapp.com",
+				projectId: "finalssofteng",
+				storageBucket: "finalssofteng.appspot.com",
+				messagingSenderId: "789005820786",
+				appId: "1:789005820786:web:6867b8c4b10c559a9833eb",
+				measurementId: "G-YVS3WKF4XT"
+            };
+		// =======================================================================================================================================================================
+
+            firebase.initializeApp(firebaseConfig);
+
+            // Access Firestore
+            const db = firebase.firestore();
+
+            // Function to fetch and populate employee data
+            function populateEmployeeData() {
+                const employeeTableBody = document.querySelector('.employee-table tbody');
+
+                if (!employeeTableBody) {
+                    console.error('Employee table body not found.');
+                    return;
+                }
+
+                // Reference to the EmployeeData collection
+                const employeeDataRef = db.collection('EmployeeData');
+
+                // Fetch data from Firestore
+                employeeDataRef.orderBy('employee_id')
+                    .get()    
+                    .then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            const employeeData = doc.data();
+
+                            // Create a new row for each employee
+                            const newRow = document.createElement('tr');
+                            newRow.setAttribute("id", employeeData.employee_id)
+                            newRow.innerHTML = `
+                                <td><input type="checkbox" class="emp-checkbox" value="${employeeData.employee_id}"></td>
+                                <td data-label="ID">${employeeData.employee_id}</td>
+                                <td data-label="Name">${employeeData.name}</td>
+                                <td data-label="Age">${employeeData.age}</td>
+                                <td data-label="Gender">${employeeData.gender}</td>
+                                <td data-label="Email">${employeeData.email}</td>
+                                <td data-label="Salary">${employeeData.salary}</td>
+                                <td data-label="Position">${employeeData.position}</td>
+                                <td data-label="Department">${employeeData.department}</td>
+                                <td>
+                                    <i class='bx bx-edit-alt icon-action btn-edit'></i>
+                                </td>
+                            `;
+
+                            // Append the new row to the table
+                            employeeTableBody.appendChild(newRow);
+                        });
+                    })
+                    .catch((error) => {
+                        console.error('Error querying Firestore:', error);
+                    });            
+            }
+
+            // Call the function to populate employee data
+            populateEmployeeData();
+
+			// // Selection of Plus Sign button by it's ID
+            const addButton = document.getElementById("btn-add");
 			
-					<tr>
-						<td><input type="checkbox"></td> <!-- Create checkbox ID based on the Employee's ID -->
-						<td>002</td>
-						<td>Joaquin Tolentino</td>
-						<td>22</td>
-						<td>Male</td>
-						<td>joaquin.tolentino@ciit.edu.ph</td>
-						<td>28,800</td>
-						<td>Senior Dev</td>
-						<td>IT Department</td>
-						<td>
-							<!-- Copy and insert this this Action Icons on every last column in every row -->
-							<i class='bx bx-edit-alt icon-action' id="btn-update"></i> 
-						</td>
-					</tr>
-					
-					<tr>
-						<td><input type="checkbox"></td> <!-- Create checkbox ID based on the Employee's ID -->
-						<td>003</td>
-						<td>Carl Sobrepena</td>
-						<td>23</td>
-						<td>Male</td>
-						<td>carl.sobrepena@ciit.edu.ph</td>
-						<td>25,000</td>
-						<td>Junior Dev</td>
-						<td>IT Department</td>
-						<td>
-							<!-- Copy and insert this this Action Icons on every last column in every row -->
-							<i class='bx bx-edit-alt icon-action' id="btn-update"></i> 
-						</td>
-					</tr>
+			// Adds a click event listener to the button
+            addButton.addEventListener("click", function () {
+                // employee.html Redirect
+                window.location.href = "add-employee.html";
+            });
+            
+            var editButton = document.getElementsByClassName("btn-edit");
 
-					<tr>
-						<td><input type="checkbox"></td> <!-- Create checkbox ID based on the Employee's ID -->
-						<td>004</td>
-						<td>Sean Regala</td>
-						<td>25</td>
-						<td>Male</td>
-						<td>sean.regala@ciit.edu.ph</td>
-						<td>23,000</td>
-						<td>Junior Dev</td>
-						<td>IT Department</td>
-						<td>
-							<!-- Copy and insert this this Action Icons on every last column in every row -->
-							<i class='bx bx-edit-alt icon-action' id="btn-update"></i> 
-						</td>
-					</tr>
-					
+            console.log(editButton);
 
-					<!-- Remove the Sample Data and insert rows here  -->
-					
-				</tbody>
-			</table>
+            document.body.addEventListener("click", function (event) {
+                
+                //Selection of the clicked edit button
+                const editBtn = event.target.closest(".btn-edit");
 
-		</section>
-	</body>
+                //Check if an edit button is clicked
+                if (editBtn) {
+                    //Reference for the row
+                    const row = editBtn.parentNode.parentNode;
+
+                    //Store the row's data in an array
+                    const cells = row.cells;
+
+                    //Stores the Employee's ID from SECOND COLUMN of the row to the sessionStorage
+                    sessionStorage.setItem('employeeID', cells[1].innerText);
+
+                     // edit-employee.html Redirect
+                    window.location.href = "edit-employee.html";
+                }
+
+            });
+
+            const deleteBtn = document.getElementById('btn-delete');
+
+            deleteBtn.addEventListener('click', function () {
+
+                const checkBoxes = document.getElementsByClassName("emp-checkbox");
+                const checkedBoxes = [];
+
+                // Checks if a checkbox is toggled
+                for (var i = 0; i <checkBoxes.length; i++) {
+
+                    //Store the toggled 
+                    if(checkBoxes[i].checked){
+                        checkedBoxes.push(checkBoxes[i]);
+                    }
+                }
+
+                if(deleteBtn && checkedBoxes.length > 0) {
+
+                    const confirmation = window.confirm("Are you sure you want to delete the following Employee(s) records?");
+
+                    if (confirmation) { 
+                        
+                        for(var i = 0; i < checkedBoxes.length; i++) {
+                            deleteEmployee(parseInt(checkedBoxes[i].value));
+                            console.log('Employee ', checkedBoxes[i].value, ' has been deleted');
+                        }
+
+                    }
+                    else { alert("no"); }       
+
+                } else { alert("Select the records you want to delete."); }
+            });
+
+            // Function for deleting employees in Firestore
+            function deleteEmployee(employeeID) {
+                const employeeDataRef = db.collection('EmployeeData');
+
+                employeeDataRef.where('employee_id', '==', employeeID)
+                    .limit(1)
+                    .get()
+                    .then((querySnapshot) => {
+                        if(!querySnapshot.empty) {
+                            querySnapshot.forEach(doc => {
+                                const employeeDocRef = db.collection('EmployeeData').doc(doc.id);
+                                console.log(doc.id);
+                                employeeDocRef.delete().then(() => {
+                                    console.log('Employee Deleted Successfully!');
+                                    location.reload();
+                                })
+                                .catch((error) => {
+                                    console.log('Error removing Employee: ', error);
+                                });
+                            })
+                        }
+                    })
+            }
+
+            const logoutBtn = document.getElementById('btn-logout');
+
+            logoutBtn.addEventListener('click', function() {
+                window.location.href = 'index.html';
+            });
+            
+        });      
+    </script>
+</body>
+
 </html>
